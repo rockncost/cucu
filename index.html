@@ -128,7 +128,7 @@
             });
 
             const total = cart.reduce((sum, item) => sum + item.price, 0);
-            document.getElementById('cart-total').textContent = `Total: $${total.toFixed(2)}`;
+            document.getElementById('cart-total').textContent = `Total: ${total.toFixed(2)} MDL`;
 
             const orderButton = document.getElementById('order-button');
             if (cart.length > 0) {
