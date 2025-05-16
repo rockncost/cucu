@@ -140,9 +140,9 @@
 
         // Handle order submission
         document.getElementById('order-button').addEventListener('click', () => {
-            const orderSummary = cart.map(item => `${item.name}: $${item.price.toFixed(2)}`).join('\n');
+            const orderSummary = cart.map(item => `${item.name}: ${item.price.toFixed(2)} MDL`).join('\n');
             WebApp.sendData(JSON.stringify({ order: cart, total: cart.reduce((sum, item) => sum + item.price, 0).toFixed(2) }));
-            WebApp.showAlert(`Order placed!\n\n${orderSummary}\nTotal: $${cart.reduce((sum, item) => sum + item.price, 0).toFixed(2)}`);
+            WebApp.showAlert(`Order placed!\n\n${orderSummary}\nTotal: ${cart.reduce((sum, item) => sum + item.price, 0).toFixed(2)} MDL`);
         });
     </script>
 </body>
