@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cucurigo Menu</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 10px;
+        }
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .menu-item {
+            background: white;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .menu-item img {
+            width: 60px;
+            height: 60px;
+            border-radius: 5px;
+        }
+        .item-details {
+            flex-grow: 1;
+            margin: 0 10px;
+        }
+        .add-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #cart {
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        #cart-total {
+            font-weight: bold;
+        }
+        #order-button {
+            width: 100%;
+            padding: 10px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Cucurigo Menu</h1>
+        <div id="menu"></div>
+        <div id="cart">
+            <h2>Your Cart</h2>
+            <div id="cart-items"></div>
+            <div id="cart-total">Total: $0.00</div>
+            <button id="order-button" style="display: none;">Place Order</button>
+        </div>
+    </div>
+    <script>
+        // Menu items from Cucurigo (update with real data)
+        const menuItems = [
+            { id: 1, name: "Pizza Margherita", price: 5.99, image: "https://via.placeholder.com/60" },
+            { id: 2, name: "Chicken Caesar Salad", price: 4.50, image: "https://via.placeholder.com/60" },
+            { id: 3, name: "Grilled Salmon", price: 8.99, image: "https://via.placeholder.com/60" }
+        ];
+
+        let cart = [];
+
+        // Set up Telegram Web App
+        const WebApp = window.Telegram.WebApp;
+        WebApp.ready();
+        WebApp.expand();
+
+        // Show menu items
+        const menu = document.getElementById('menu');
+        menuItems.forEach(item => {
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'menu-item';
+            itemDiv.innerHTML = `
+                <img src="${item.image}" alt="${item.name}">
+                <div class="item-details">
+                    <h3>${item.name}</h3>
+                    <p>$${item.price.toFixed(2)}</p>
+                </div>
+                <button class="add-button" onclick="addToCart(${item.id})">Add</button>
+            `;
+            menu.appendChild(itemDiv);
+        });
+
+        // Add item to cart
+        function addToCart(itemId) {
+            const item = menuItems.find(i => i.id === itemId);
+            cart.push(item);
+            updateCart();
+            WebApp.showAlert(`Added ${item.name} to cart!`);
+        }
+
+        // Update cart display
+        function updateCart() {
+            const cartItems = document.getElementById('cart-items');
+            cartItems.innerHTML = '';
+            cart.forEach(item => {
+                const itemDiv = document.createElement('div');
+                itemDiv.textContent = `${item.name} - $${item.price.toFixed(2)}`;
+                cartItems.appendChild(itemDiv);
+            });
+
+            const total = cart.reduce((sum, item) => sum + item.price, 0);
+            document.getElementById('cart-total').textContent = `Total: $${total.toFixed(2)}`;
+
+            const orderButton = document.getElementById('order-button');
+            if (cart.length > 0) {
+                orderButton.style.display = 'block';
+            } else {
+                orderButton.style.display = 'none';
+            }
+        }
+
+        // Handle order submission
+        document.getElementById('order-button').addEventListener('click', () => {
+            const orderSummary = cart.map(item => `${item.name}: $${item.price.toFixed(2)}`).join('\n');
+            WebApp.sendData(JSON.stringify({ order: cart, total: cart.reduce((sum, item) => sum + item.price, 0).toFixed(2) }));
+            WebApp.showAlert(`Order placed!\n\n${orderSummary}\nTotal: $${cart.reduce((sum, item) => sum + item.price, 0).toFixed(2)}`);
+        });
+    </script>
+</body>
+</html>
