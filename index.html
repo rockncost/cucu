@@ -6,11 +6,35 @@
     <title>Cucurigo Menu</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
+        :root {
+            /* Light mode variables */
+            --background-color: #f0f0f0;
+            --text-color: #333;
+            --menu-item-bg: white;
+            --cart-bg: white;
+            --add-button-bg: #007bff;
+            --order-button-bg: #28a745;
+            --button-text-color: white;
+        }
+
+        [data-theme="dark"] {
+            /* Dark mode variables */
+            --background-color: #1a1a1a;
+            --text-color: #e0e0e0;
+            --menu-item-bg: #2c2c2c;
+            --cart-bg: #2c2c2c;
+            --add-button-bg: #005bb5;
+            --order-button-bg: #218838;
+            --button-text-color: #e0e0e0;
+        }
+
         body {
             font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
+            background-color: var(--background-color);
+            color: var(--text-color);
             margin: 0;
             padding: 10px;
+            transition: background-color 0.3s, color 0.3s;
         }
         .container {
             max-width: 500px;
@@ -18,16 +42,17 @@
         }
         h1 {
             text-align: center;
-            color: #333;
+            color: var(--text-color);
         }
         .menu-item {
-            background: white;
+            background: var(--menu-item-bg);
             padding: 10px;
             margin: 10px 0;
             border-radius: 5px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            transition: background-color 0.3s;
         }
         .menu-item img {
             width: 60px;
@@ -39,18 +64,20 @@
             margin: 0 10px;
         }
         .add-button {
-            background: #007bff;
-            color: white;
+            background: var(--add-button-bg);
+            color: var(--button-text-color);
             border: none;
             padding: 5px 10px;
             border-radius: 5px;
             cursor: pointer;
+            transition: background-color 0.3s;
         }
         #cart {
-            background: white;
+            background: var(--cart-bg);
             padding: 10px;
             border-radius: 5px;
             margin-top: 20px;
+            transition: background-color 0.3s;
         }
         #cart-total {
             font-weight: bold;
@@ -58,12 +85,13 @@
         #order-button {
             width: 100%;
             padding: 10px;
-            background: #28a745;
-            color: white;
+            background: var(--order-button-bg);
+            color: var(--button-text-color);
             border: none;
             border-radius: 5px;
             cursor: pointer;
             margin-top: 10px;
+            transition: background-color 0.3s;
         }
     </style>
 </head>
@@ -79,7 +107,7 @@
         </div>
     </div>
     <script>
-        // Menu items from Cucurigo (update with real data)
+        // Menu items from Cucurigo
         const menuItems = [
             { id: 1, name: "CupMix Nuggets & PopCorn", price: 169, image: "https://cucurigo.md/upload/catalog/product/7velvfp9jj.png" },
             { id: 2, name: "CupMix ALL", price: 189, image: "https://cucurigo.md/upload/catalog/product/5pmpujor_9.png" },
@@ -92,6 +120,18 @@
         const WebApp = window.Telegram.WebApp;
         WebApp.ready();
         WebApp.expand();
+
+        // Apply color scheme based on user's Telegram theme
+        function applyColorScheme() {
+            const theme = WebApp.colorScheme; // Returns "light" or "dark"
+            document.body.setAttribute('data-theme', theme);
+        }
+
+        // Apply theme on load
+        applyColorScheme();
+
+        // Listen for theme changes
+        WebApp.onEvent('themeChanged', applyColorScheme);
 
         // Show menu items
         const menu = document.getElementById('menu');
