@@ -74,7 +74,7 @@
         <div id="cart">
             <h2>Your Cart</h2>
             <div id="cart-items"></div>
-            <div id="cart-total">Total: $0.00</div>
+            <div id="cart-total">Total: 0.00 MDL</div>
             <button id="order-button" style="display: none;">Place Order</button>
         </div>
     </div>
@@ -123,7 +123,7 @@
             cartItems.innerHTML = '';
             cart.forEach(item => {
                 const itemDiv = document.createElement('div');
-                itemDiv.textContent = `${item.name} - $${item.price.toFixed(2)}`;
+                itemDiv.textContent = `${item.name} - ${item.price.toFixed(2)} MDL`;
                 cartItems.appendChild(itemDiv);
             });
 
