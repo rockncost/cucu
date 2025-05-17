@@ -12,8 +12,9 @@
             --text-color: #333;
             --menu-item-bg: white;
             --cart-bg: white;
-            --add-button-bg: #007bff;
-            --order-button-bg: #28a745;
+            --add-button-bg: #ff9900;
+            --buy-button-bg: #28a745;
+            --view-order-bg: #28a745;
             --button-text-color: white;
         }
 
@@ -23,14 +24,15 @@
             --text-color: #e0e0e0;
             --menu-item-bg: #2c2c2c;
             --cart-bg: #2c2c2c;
-            --add-button-bg: #005bb5;
-            --order-button-bg: #218838;
+            --add-button-bg: #ff9900;
+            --buy-button-bg: #218838;
+            --view-order-bg: #218838;
             --button-text-color: #e0e0e0;
         }
 
         body {
             font-family: 'Helvetica Neue', Arial, sans-serif;
-            font-weight: 700; /* Bolder font */
+            font-weight: 700;
             background-color: var(--background-color);
             color: var(--text-color);
             margin: 0;
@@ -40,20 +42,27 @@
         .container {
             max-width: 500px;
             margin: 0 auto;
+            text-align: center;
         }
         h1 {
             text-align: center;
             color: var(--text-color);
+            margin-bottom: 10px;
+        }
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            padding: 10px 0;
         }
         .menu-item {
             background: var(--menu-item-bg);
             padding: 10px;
-            margin: 10px 0;
             border-radius: 5px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
             transition: background-color 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         .menu-item img {
             width: 60px;
@@ -61,64 +70,88 @@
             border-radius: 5px;
         }
         .item-details {
-            flex-grow: 1;
-            margin: 0 10px;
+            margin: 5px 0;
         }
-        .add-button {
+        .item-details p {
+            margin: 0;
+            font-size: 14px;
+        }
+        .quantity-controls {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin-top: 5px;
+        }
+        .quantity-btn {
+            background: #ff4444;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 14px;
+        }
+        .quantity {
+            font-weight: 700;
+            font-size: 14px;
+            padding: 5px;
+        }
+        .add-button, .buy-button {
             background: var(--add-button-bg);
             color: var(--button-text-color);
             border: none;
-            padding: 8px 16px; /* Larger padding for bigger buttons */
+            padding: 8px 16px;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 16px; /* Larger font size for button text */
-            font-weight: 700; /* Ensure button text is bold */
+            font-size: 16px;
+            font-weight: 700;
             transition: background-color 0.3s;
+            margin-top: 5px;
         }
-        #cart {
-            background: var(--cart-bg);
-            padding: 10px;
-            border-radius: 5px;
-            margin-top: 20px;
-            transition: background-color 0.3s;
+        .buy-button {
+            background: var(--buy-button-bg);
         }
-        #cart-total {
-            font-weight: 700; /* Consistent bold font */
-        }
-        #order-button {
+        #view-order {
             width: 100%;
             padding: 10px;
-            background: var(--order-button-bg);
+            background: var(--view-order-bg);
             color: var(--button-text-color);
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            font-weight: 700;
             margin-top: 10px;
-            font-weight: 700; /* Consistent bold font */
-            transition: background-color 0.3s;
+            font-size: 16px;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Cucurigo Menu</h1>
-        <div id="menu"></div>
-        <div id="cart">
-            <h2>Your Cart</h2>
-            <div id="cart-items"></div>
-            <div id="cart-total">Total: 0 MDL</div>
-            <button id="order-button" style="display: none;">Place Order</button>
-        </div>
+        <div class="menu-grid" id="menu"></div>
+        <button id="view-order" style="display: none;">VIEW ORDER</button>
     </div>
     <script>
-        // Menu items from Cucurigo
+        // Menu items from Cucurigo with simplified icons
         const menuItems = [
-            { id: 1, name: "CupMix Nuggets & PopCorn", price: 169, image: "https://cucurigo.md/upload/catalog/product/7velvfp9jj.png" },
-            { id: 2, name: "CupMix ALL", price: 189, image: "https://cucurigo.md/upload/catalog/product/5pmpujor_9.png" },
-            { id: 3, name: "CupMix Crispy & Aripioare", price: 189, image: "https://cucurigo.md/upload/catalog/product/4rd7z72nt5.png" }
+            { id: 1, name: "Nuggets & PopCorn", price: 169, icon: "🍗" },
+            { id: 2, name: "CupMix ALL", price: 189, icon: "🍔" },
+            { id: 3, name: "Crispy & Aripioare", price: 189, icon: "🌮" },
+            { id: 4, name: "Special Cake", price: 150, icon: "🎂", buyOnly: true },
+            { id: 5, name: "Fries", price: 80, icon: "🍟" },
+            { id: 6, name: "Hotdog", price: 90, icon: "🌭" },
+            { id: 7, name: "Taco", price: 100, icon: "🥙" },
+            { id: 8, name: "Pizza", price: 120, icon: "🍕" },
+            { id: 9, name: "Donut", price: 50, icon: "🍩" },
+            { id: 10, name: "Popcorn", price: 60, icon: "🍿" },
+            { id: 11, name: "Coke", price: 40, icon: "🥤" },
+            { id: 12, name: "Ice Cream", price: 70, icon: "🍨" },
+            { id: 13, name: "Cookie", price: 30, icon: "🍪" },
+            { id: 14, name: "Flan", price: 90, icon: "🍮" }
         ];
 
-        let cart = [];
+        let cart = {};
 
         // Set up Telegram Web App
         const WebApp = window.Telegram.WebApp;
@@ -127,7 +160,7 @@
 
         // Apply color scheme based on user's Telegram theme
         function applyColorScheme() {
-            const theme = WebApp.colorScheme; // Returns "light" or "dark"
+            const theme = WebApp.colorScheme;
             document.body.setAttribute('data-theme', theme);
         }
 
@@ -143,50 +176,73 @@
             const itemDiv = document.createElement('div');
             itemDiv.className = 'menu-item';
             itemDiv.innerHTML = `
-                <img src="${item.image}" alt="${item.name}">
                 <div class="item-details">
-                    <h3>${item.name}</h3>
+                    <span style="font-size: 40px;">${item.icon}</span>
+                    <p>${item.name}</p>
                     <p>${item.price} MDL</p>
                 </div>
-                <button class="add-button" onclick="addToCart(${item.id})">Add</button>
+                ${item.buyOnly ? '<button class="buy-button">BUY</button>' : `
+                    <div class="quantity-controls">
+                        <button class="quantity-btn" onclick="updateQuantity(${item.id}, -1)">-</button>
+                        <span class="quantity" id="qty-${item.id}">0</span>
+                        <button class="quantity-btn" onclick="updateQuantity(${item.id}, 1)">+</button>
+                    </div>
+                    <button class="add-button" onclick="addToCart(${item.id})">ADD</button>
+                `}
             `;
             menu.appendChild(itemDiv);
         });
 
+        // Update quantity and cart
+        function updateQuantity(itemId, change) {
+            const qtyElement = document.getElementById(`qty-${itemId}`);
+            let qty = parseInt(qtyElement.textContent) + change;
+            qty = Math.max(0, qty); // Prevent negative quantities
+            qtyElement.textContent = qty;
+            if (qty === 0 && cart[itemId]) {
+                delete cart[itemId];
+            } else if (cart[itemId]) {
+                cart[itemId].quantity = qty;
+            }
+            updateViewOrderButton();
+        }
+
         // Add item to cart
         function addToCart(itemId) {
             const item = menuItems.find(i => i.id === itemId);
-            cart.push(item);
-            updateCart();
-            WebApp.showAlert(`Added ${item.name} to cart!`);
-        }
-
-        // Update cart display
-        function updateCart() {
-            const cartItems = document.getElementById('cart-items');
-            cartItems.innerHTML = '';
-            cart.forEach(item => {
-                const itemDiv = document.createElement('div');
-                itemDiv.textContent = `${item.name} - ${item.price} MDL`;
-                cartItems.appendChild(itemDiv);
-            });
-
-            const total = cart.reduce((sum, item) => sum + item.price, 0);
-            document.getElementById('cart-total').textContent = `Total: ${total} MDL`;
-
-            const orderButton = document.getElementById('order-button');
-            if (cart.length > 0) {
-                orderButton.style.display = 'block';
-            } else {
-                orderButton.style.display = 'none';
+            if (!cart[itemId]) {
+                cart[itemId] = { ...item, quantity: 0 };
             }
+            cart[itemId].quantity++;
+            document.getElementById(`qty-${itemId}`).textContent = cart[itemId].quantity;
+            WebApp.showAlert(`Added ${item.name} to cart!`);
+            updateViewOrderButton();
         }
 
-        // Handle order submission
-        document.getElementById('order-button').addEventListener('click', () => {
-            const orderSummary = cart.map(item => `${item.name}: ${item.price} MDL`).join('\n');
-            WebApp.sendData(JSON.stringify({ order: cart, total: cart.reduce((sum, item) => sum + item.price, 0) }));
-            WebApp.showAlert(`Order placed!\n\n${orderSummary}\nTotal: ${cart.reduce((sum, item) => sum + item.price, 0)} MDL`);
+        // Handle buy button
+        function buyItem(itemId) {
+            const item = menuItems.find(i => i.id === itemId);
+            WebApp.sendData(JSON.stringify({ order: [{ ...item, quantity: 1 }], total: item.price }));
+            WebApp.showAlert(`Purchased ${item.name} for ${item.price} MDL!`);
+        }
+
+        // Update view order button visibility
+        function updateViewOrderButton() {
+            const viewOrderBtn = document.getElementById('view-order');
+            const totalQuantity = Object.values(cart).reduce((sum, item) => sum + (item.quantity || 0), 0);
+            viewOrderBtn.style.display = totalQuantity > 0 ? 'block' : 'none';
+        }
+
+        // Handle view order
+        document.getElementById('view-order').addEventListener('click', () => {
+            const orderItems = Object.values(cart).filter(item => item.quantity > 0);
+            const orderSummary = orderItems.map(item => `${item.name} x${item.quantity}: ${item.price * item.quantity} MDL`).join('\n');
+            const total = orderItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+            WebApp.sendData(JSON.stringify({ order: orderItems, total }));
+            WebApp.showAlert(`Order placed!\n\n${orderSummary}\nTotal: ${total} MDL`);
+            cart = {}; // Clear cart after order
+            document.querySelectorAll('.quantity').forEach(qty => qty.textContent = '0');
+            updateViewOrderButton();
         });
     </script>
 </body>
