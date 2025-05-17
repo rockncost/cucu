@@ -13,9 +13,10 @@
             --menu-item-bg: white;
             --cart-bg: white;
             --add-button-bg: #ff9900;
-            --buy-button-bg: #28a745;
             --view-order-bg: #28a745;
             --button-text-color: white;
+            --category-bg: #d32f2f;
+            --category-text-color: white;
         }
 
         [data-theme="dark"] {
@@ -25,9 +26,10 @@
             --menu-item-bg: #2c2c2c;
             --cart-bg: #2c2c2c;
             --add-button-bg: #ff9900;
-            --buy-button-bg: #218838;
             --view-order-bg: #218838;
             --button-text-color: #e0e0e0;
+            --category-bg: #b71c1c;
+            --category-text-color: #e0e0e0;
         }
 
         body {
@@ -49,13 +51,13 @@
             color: var(--text-color);
             margin-bottom: 10px;
         }
-        .menu-grid {
+        .category-grid, .menu-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 10px;
             padding: 10px 0;
         }
-        .menu-item {
+        .category-item, .menu-item {
             background: var(--menu-item-bg);
             padding: 10px;
             border-radius: 5px;
@@ -64,10 +66,16 @@
             flex-direction: column;
             align-items: center;
         }
-        .menu-item img {
+        .category-item {
+            background: var(--category-bg);
+            color: var(--category-text-color);
+            cursor: pointer;
+        }
+        .category-item img, .menu-item img {
             width: 60px;
             height: 60px;
             border-radius: 5px;
+            margin-bottom: 5px;
         }
         .item-details {
             margin: 5px 0;
@@ -93,11 +101,18 @@
             font-size: 14px;
         }
         .quantity {
+            background: #ff9900;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-weight: 700;
             font-size: 14px;
-            padding: 5px;
         }
-        .add-button, .buy-button {
+        .add-button {
             background: var(--add-button-bg);
             color: var(--button-text-color);
             border: none;
@@ -109,10 +124,7 @@
             transition: background-color 0.3s;
             margin-top: 5px;
         }
-        .buy-button {
-            background: var(--buy-button-bg);
-        }
-        #view-order {
+        #view-order, #back-to-categories {
             width: 100%;
             padding: 10px;
             background: var(--view-order-bg);
@@ -124,34 +136,62 @@
             margin-top: 10px;
             font-size: 16px;
         }
+        #menu-content {
+            min-height: 300px; /* Ensure space for content */
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Cucurigo Menu</h1>
-        <div class="menu-grid" id="menu"></div>
+        <div id="menu-content"></div>
+        <button id="back-to-categories" style="display: none;">BACK TO CATEGORIES</button>
         <button id="view-order" style="display: none;">VIEW ORDER</button>
     </div>
     <script>
-        // Menu items from Cucurigo with simplified icons
+        // Categories
+        const categories = [
+            { id: 'pui', name: 'PUI', image: 'https://via.placeholder.com/60' },
+            { id: 'burger', name: 'BURGER', image: 'https://via.placeholder.com/60' },
+            { id: 'meniuri', name: 'MENIURI', image: 'https://via.placeholder.com/60' },
+            { id: 'cupmix', name: 'CUPMIX', image: 'https://via.placeholder.com/60' },
+            { id: 'garnituri', name: 'GARNITURI', image: 'https://via.placeholder.com/60' },
+            { id: 'sosuri', name: 'SOSURI', image: 'https://via.placeholder.com/60' },
+            { id: 'bauturi reci', name: 'BAUTURI RECI', image: 'https://via.placeholder.com/60' },
+            { id: 'bauturi calde', name: 'BAUTURI CALDE', image: 'https://via.placeholder.com/60' },
+            { id: 'desert', name: 'DESERT', image: 'https://via.placeholder.com/60' }
+        ];
+
+        // Menu items
         const menuItems = [
-            { id: 1, name: "Nuggets & PopCorn", price: 169, icon: "🍗" },
-            { id: 2, name: "CupMix ALL", price: 189, icon: "🍔" },
-            { id: 3, name: "Crispy & Aripioare", price: 189, icon: "🌮" },
-            { id: 4, name: "Special Cake", price: 150, icon: "🎂", buyOnly: true },
-            { id: 5, name: "Fries", price: 80, icon: "🍟" },
-            { id: 6, name: "Hotdog", price: 90, icon: "🌭" },
-            { id: 7, name: "Taco", price: 100, icon: "🥙" },
-            { id: 8, name: "Pizza", price: 120, icon: "🍕" },
-            { id: 9, name: "Donut", price: 50, icon: "🍩" },
-            { id: 10, name: "Popcorn", price: 60, icon: "🍿" },
-            { id: 11, name: "Coke", price: 40, icon: "🥤" },
-            { id: 12, name: "Ice Cream", price: 70, icon: "🍨" },
-            { id: 13, name: "Cookie", price: 30, icon: "🍪" },
-            { id: 14, name: "Flan", price: 90, icon: "🍮" }
+            // PUI (from previous version)
+            { id: 1, name: "Crispy", price: 169, category: "pui", image: "https://via.placeholder.com/60" },
+            { id: 2, name: "Aripioare", price: 149, category: "pui", image: "https://via.placeholder.com/60" },
+            { id: 3, name: "Nuggets", price: 159, category: "pui", image: "https://via.placeholder.com/60" },
+            { id: 4, name: "Popcorn", price: 139, category: "pui", image: "https://via.placeholder.com/60" },
+            // BURGER (from previous version)
+            { id: 5, name: "Rigo Burger", price: 189, category: "burger", image: "https://via.placeholder.com/60" },
+            // MENIURI (from screenshots 1-2)
+            { id: 6, name: "Meniu Crispy", price: 299, category: "meniuri", image: "https://via.placeholder.com/60" },
+            { id: 7, name: "Meniu Aripioare", price: 279, category: "meniuri", image: "https://via.placeholder.com/60" },
+            { id: 8, name: "Meniu Nuggets", price: 289, category: "meniuri", image: "https://via.placeholder.com/60" },
+            { id: 9, name: "Meniu Popcorn", price: 269, category: "meniuri", image: "https://via.placeholder.com/60" },
+            { id: 10, name: "Meniu Rigo Burger", price: 319, category: "meniuri", image: "https://via.placeholder.com/60" },
+            { id: 11, name: "Meniu Crispy & Aripioare", price: 349, category: "meniuri", image: "https://via.placeholder.com/60" },
+            { id: 12, name: "Meniu Nuggets & Popcorn", price: 339, category: "meniuri", image: "https://via.placeholder.com/60" },
+            { id: 13, name: "Meniu Cupmix All", price: 359, category: "meniuri", image: "https://via.placeholder.com/60" },
+            // CUPMIX (from screenshot 3)
+            { id: 14, name: "Cupmix Nuggets & Popcorn", price: 199, category: "cupmix", image: "https://via.placeholder.com/60" },
+            { id: 15, name: "Cupmix All", price: 229, category: "cupmix", image: "https://via.placeholder.com/60" },
+            { id: 16, name: "Cupmix Crispy & Aripioare", price: 219, category: "cupmix", image: "https://via.placeholder.com/60" },
+            // GARNITURI (from screenshot 4)
+            { id: 17, name: "Cartofi Cheddar", price: 79, category: "garnituri", image: "https://via.placeholder.com/60" },
+            { id: 18, name: "Cartofi Prăjiți", price: 69, category: "garnituri", image: "https://via.placeholder.com/60" },
+            { id: 19, name: "Inele de Ceapă", price: 59, category: "garnituri", image: "https://via.placeholder.com/60" }
         ];
 
         let cart = {};
+        let currentCategory = null;
 
         // Set up Telegram Web App
         const WebApp = window.Telegram.WebApp;
@@ -170,27 +210,83 @@
         // Listen for theme changes
         WebApp.onEvent('themeChanged', applyColorScheme);
 
-        // Show menu items
-        const menu = document.getElementById('menu');
-        menuItems.forEach(item => {
-            const itemDiv = document.createElement('div');
-            itemDiv.className = 'menu-item';
-            itemDiv.innerHTML = `
-                <div class="item-details">
-                    <span style="font-size: 40px;">${item.icon}</span>
-                    <p>${item.name}</p>
-                    <p>${item.price} MDL</p>
-                </div>
-                ${item.buyOnly ? '<button class="buy-button">BUY</button>' : `
-                    <div class="quantity-controls">
-                        <button class="quantity-btn" onclick="updateQuantity(${item.id}, -1)">-</button>
-                        <span class="quantity" id="qty-${item.id}">0</span>
-                        <button class="quantity-btn" onclick="updateQuantity(${item.id}, 1)">+</button>
+        // Render categories
+        function renderCategories() {
+            const menuContent = document.getElementById('menu-content');
+            menuContent.innerHTML = '';
+            const categoryGrid = document.createElement('div');
+            categoryGrid.className = 'category-grid';
+            categories.forEach(category => {
+                const categoryDiv = document.createElement('div');
+                categoryDiv.className = 'category-item';
+                categoryDiv.innerHTML = `
+                    <img src="${category.image}" alt="${category.name}">
+                    <div class="item-details">
+                        <p>${category.name}</p>
                     </div>
-                    <button class="add-button" onclick="addToCart(${item.id})">ADD</button>
-                `}
-            `;
-            menu.appendChild(itemDiv);
+                `;
+                categoryDiv.onclick = () => {
+                    currentCategory = category.id;
+                    renderMenu();
+                    document.getElementById('back-to-categories').style.display = 'block';
+                };
+                categoryGrid.appendChild(categoryDiv);
+            });
+            menuContent.appendChild(categoryGrid);
+            document.getElementById('back-to-categories').style.display = 'none';
+        }
+
+        // Render menu items
+        function renderMenu() {
+            const menuContent = document.getElementById('menu-content');
+            menuContent.innerHTML = '';
+
+            if (['pui', 'burger', 'meniuri', 'cupmix', 'garnituri'].includes(currentCategory)) {
+                const filteredItems = menuItems.filter(item => item.category === currentCategory);
+                const menuGrid = document.createElement('div');
+                menuGrid.className = 'menu-grid';
+                filteredItems.forEach(item => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'menu-item';
+                    const qty = cart[item.id] ? cart[item.id].quantity : 0;
+                    itemDiv.innerHTML = `
+                        <img src="${item.image}" alt="${item.name}">
+                        <div class="item-details">
+                            <p>${item.name}</p>
+                            <p>${item.price} MDL</p>
+                        </div>
+                        <div id="controls-${item.id}">
+                            ${qty === 0 ? `
+                                <button class="add-button" onclick="addToCart(${item.id})">ADD</button>
+                            ` : `
+                                <div class="quantity-controls">
+                                    <button class="quantity-btn" onclick="updateQuantity(${item.id}, -1)">-</button>
+                                    <span class="quantity" id="qty-${item.id}">${qty}</span>
+                                    <button class="quantity-btn" onclick="updateQuantity(${item.id}, 1)">+</button>
+                                </div>
+                            `}
+                        </div>
+                    `;
+                    menuGrid.appendChild(itemDiv);
+                });
+                menuContent.appendChild(menuGrid);
+            } else {
+                const messageDiv = document.createElement('div');
+                messageDiv.style.padding = '20px';
+                messageDiv.textContent = 'This category will be available soon.';
+                menuContent.appendChild(messageDiv);
+            }
+
+            updateViewOrderButton();
+        }
+
+        // Initial render (categories)
+        renderCategories();
+
+        // Back to categories
+        document.getElementById('back-to-categories').addEventListener('click', () => {
+            currentCategory = null;
+            renderCategories();
         });
 
         // Update quantity and cart
@@ -198,13 +294,17 @@
             const qtyElement = document.getElementById(`qty-${itemId}`);
             let qty = parseInt(qtyElement.textContent) + change;
             qty = Math.max(0, qty); // Prevent negative quantities
-            qtyElement.textContent = qty;
-            if (qty === 0 && cart[itemId]) {
+            if (qty === 0) {
                 delete cart[itemId];
-            } else if (cart[itemId]) {
+            } else {
+                if (!cart[itemId]) {
+                    const item = menuItems.find(i => i.id === itemId);
+                    cart[itemId] = { ...item, quantity: 0 };
+                }
                 cart[itemId].quantity = qty;
             }
             updateViewOrderButton();
+            renderMenu(); // Re-render to update controls
         }
 
         // Add item to cart
@@ -214,16 +314,9 @@
                 cart[itemId] = { ...item, quantity: 0 };
             }
             cart[itemId].quantity++;
-            document.getElementById(`qty-${itemId}`).textContent = cart[itemId].quantity;
             WebApp.showAlert(`Added ${item.name} to cart!`);
             updateViewOrderButton();
-        }
-
-        // Handle buy button
-        function buyItem(itemId) {
-            const item = menuItems.find(i => i.id === itemId);
-            WebApp.sendData(JSON.stringify({ order: [{ ...item, quantity: 1 }], total: item.price }));
-            WebApp.showAlert(`Purchased ${item.name} for ${item.price} MDL!`);
+            renderMenu(); // Re-render to show quantity controls
         }
 
         // Update view order button visibility
@@ -240,8 +333,8 @@
             const total = orderItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
             WebApp.sendData(JSON.stringify({ order: orderItems, total }));
             WebApp.showAlert(`Order placed!\n\n${orderSummary}\nTotal: ${total} MDL`);
-            cart = {}; // Clear cart after order
-            document.querySelectorAll('.quantity').forEach(qty => qty.textContent = '0');
+            cart = {};
+            renderMenu();
             updateViewOrderButton();
         });
     </script>
