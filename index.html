@@ -3,340 +3,464 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cucurigo Menu</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <title>Balenciaga-inspired Store</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        :root {
-            /* Light mode variables */
-            --background-color: #f0f0f0;
-            --text-color: #333;
-            --menu-item-bg: white;
-            --cart-bg: white;
-            --add-button-bg: #ff9900;
-            --view-order-bg: #28a745;
-            --button-text-color: white;
-            --category-bg: #d32f2f;
-            --category-text-color: white;
-        }
-
-        [data-theme="dark"] {
-            /* Dark mode variables */
-            --background-color: #1a1a1a;
-            --text-color: #e0e0e0;
-            --menu-item-bg: #2c2c2c;
-            --cart-bg: #2c2c2c;
-            --add-button-bg: #ff9900;
-            --view-order-bg: #218838;
-            --button-text-color: #e0e0e0;
-            --category-bg: #b71c1c;
-            --category-text-color: #e0e0e0;
-        }
-
         body {
-            font-family: 'Helvetica Neue', Arial, sans-serif;
-            font-weight: 700;
-            background-color: var(--background-color);
-            color: var(--text-color);
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6; /* Light gray background */
+            color: #1f2937; /* Dark gray text */
+        }
+        /* Custom scrollbar for product list */
+        .product-grid::-webkit-scrollbar {
+            width: 8px;
+        }
+        .product-grid::-webkit-scrollbar-track {
+            background: #e5e7eb;
+            border-radius: 10px;
+        }
+        .product-grid::-webkit-scrollbar-thumb {
+            background: #9ca3af;
+            border-radius: 10px;
+        }
+        .product-grid::-webkit-scrollbar-thumb:hover {
+            background: #6b7280;
+        }
+
+        /* Hide default number input arrows */
+        input[type='number']::-webkit-inner-spin-button,
+        input[type='number']::-webkit-outer-spin-button {
+            -webkit-appearance: none;
             margin: 0;
-            padding: 10px;
-            transition: background-color 0.3s, color 0.3s;
         }
-        .container {
-            max-width: 500px;
-            margin: 0 auto;
-            text-align: center;
-        }
-        h1 {
-            text-align: center;
-            color: var(--text-color);
-            margin-bottom: 10px;
-        }
-        .category-grid, .menu-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            padding: 10px 0;
-        }
-        .category-item, .menu-item {
-            background: var(--menu-item-bg);
-            padding: 10px;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .category-item {
-            background: var(--category-bg);
-            color: var(--category-text-color);
-            cursor: pointer;
-        }
-        .category-item img, .menu-item img {
-            width: 60px;
-            height: 60px;
-            border-radius: 5px;
-            margin-bottom: 5px;
-        }
-        .item-details {
-            margin: 5px 0;
-        }
-        .item-details p {
-            margin: 0;
-            font-size: 14px;
-        }
-        .quantity-controls {
-            display: flex;
-            justify-content: center;
-            gap: 5px;
-            margin-top: 5px;
-        }
-        .quantity-btn {
-            background: #ff4444;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: 700;
-            font-size: 14px;
-        }
-        .quantity {
-            background: #ff9900;
-            color: white;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 14px;
-        }
-        .add-button {
-            background: var(--add-button-bg);
-            color: var(--button-text-color);
-            border: none;
-            padding: 8px 16px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 700;
-            transition: background-color 0.3s;
-            margin-top: 5px;
-        }
-        #view-order, #back-to-categories {
-            width: 100%;
-            padding: 10px;
-            background: var(--view-order-bg);
-            color: var(--button-text-color);
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: 700;
-            margin-top: 10px;
-            font-size: 16px;
-        }
-        #menu-content {
-            min-height: 300px; /* Ensure space for content */
+        input[type='number'] {
+            -moz-appearance: textfield;
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <h1>Cucurigo Menu</h1>
-        <div id="menu-content"></div>
-        <button id="back-to-categories" style="display: none;">BACK TO CATEGORIES</button>
-        <button id="view-order" style="display: none;">VIEW ORDER</button>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Main Application Container -->
+    <div id="app" class="flex flex-col flex-1 max-w-2xl mx-auto w-full bg-white rounded-lg shadow-xl p-4 sm:p-6 my-4">
+
+        <!-- Header -->
+        <header class="text-center mb-6">
+            <h1 class="text-3xl sm:text-4xl font-bold text-gray-800 tracking-tight">
+                <span class="bg-clip-text text-transparent bg-gradient-to-r from-gray-700 to-gray-900">
+                    DISTORTION
+                </span>
+            </h1>
+            <p class="text-gray-500 mt-1 text-sm sm:text-base">Curated Unique Apparel & Footwear</p>
+        </header>
+
+        <!-- Product Grid -->
+        <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-6 overflow-y-auto custom-scroll flex-grow mb-6 max-h-[calc(100vh-250px)]">
+            <!-- Products will be injected here by JavaScript -->
+        </div>
+
+        <!-- Floating Cart Button -->
+        <button id="cart-button" class="fixed bottom-6 right-6 bg-gradient-to-r from-gray-700 to-gray-900 text-white p-4 rounded-full shadow-lg hover:from-gray-600 hover:to-gray-800 transition-all duration-300 transform hover:scale-105 z-50 focus:outline-none focus:ring-4 focus:ring-gray-300">
+            <i class="fas fa-shopping-cart text-xl"></i>
+            <span id="cart-count" class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full transform translate-x-1/2 -translate-y-1/2 opacity-0 transition-opacity duration-300">
+                0
+            </span>
+        </button>
+
+        <!-- Cart Modal -->
+        <div id="cart-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50 hidden p-4">
+            <div class="bg-white rounded-xl shadow-2xl p-6 w-full max-w-md transform transition-all duration-300 scale-95 opacity-0" id="cart-modal-content">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800">Your Cart</h2>
+                    <button id="close-cart-modal" class="text-gray-500 hover:text-gray-700 focus:outline-none">
+                        <i class="fas fa-times text-2xl"></i>
+                    </button>
+                </div>
+                <div id="cart-items-container" class="max-h-80 overflow-y-auto mb-6 pr-2">
+                    <!-- Cart items will be injected here -->
+                    <p id="empty-cart-message" class="text-gray-500 text-center">Your cart is empty.</p>
+                </div>
+                <div class="flex justify-between items-center border-t border-gray-200 pt-4">
+                    <p class="text-lg font-semibold text-gray-800">Total:</p>
+                    <p id="cart-total" class="text-lg font-bold text-gray-900">$0.00</p>
+                </div>
+                <button id="checkout-button" class="w-full mt-6 py-3 px-4 rounded-lg bg-gradient-to-r from-gray-700 to-gray-900 text-white font-semibold shadow-md hover:from-gray-600 hover:to-gray-800 transition-all duration-300 transform hover:scale-[1.01] focus:outline-none focus:ring-4 focus:ring-gray-300">
+                    Checkout
+                </button>
+            </div>
+        </div>
+
+        <!-- Custom Alert Modal -->
+        <div id="alert-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50 hidden p-4">
+            <div class="bg-white rounded-xl shadow-2xl p-6 w-full max-w-sm transform transition-all duration-300 scale-95 opacity-0" id="alert-modal-content">
+                <h3 class="text-xl font-bold text-gray-800 mb-4" id="alert-title">Alert</h3>
+                <p class="text-gray-700 mb-6" id="alert-message"></p>
+                <button id="close-alert-modal" class="w-full py-2 px-4 rounded-lg bg-gray-800 text-white font-semibold shadow-md hover:bg-gray-700 transition-colors duration-200 focus:outline-none focus:ring-4 focus:ring-gray-300">
+                    OK
+                </button>
+            </div>
+        </div>
+
     </div>
+
     <script>
-        // Categories
-        const categories = [
-            { id: 'pui', name: 'PUI', image: 'https://cucurigo.md/upload/catalog/product/lgezhkrpc1.png' },
-            { id: 'burger', name: 'BURGER', image: 'https://cucurigo.md/upload/catalog/product/63y6j4ryky.png' },
-            { id: 'meniuri', name: 'MENIURI', image: 'https://cucurigo.md/upload/catalog/product/3z_n_agal1.png' },
-            { id: 'cupmix', name: 'CUPMIX', image: 'https://cucurigo.md/upload/catalog/product/4rd7z72nt5.png' },
-            { id: 'garnituri', name: 'GARNITURI', image: 'https://cucurigo.md/upload/catalog/product/ch2yhesmc5.png' },
-            { id: 'sosuri', name: 'SOSURI', image: 'https://cucurigo.md/upload/catalog/product/24rspdvy4m.png' },
-            { id: 'bauturi reci', name: 'BAUTURI RECI', image: 'https://cucurigo.md/upload/catalog/product/_gi_tya9pa.png' },
-            { id: 'bauturi calde', name: 'BAUTURI CALDE', image: 'https://cucurigo.md/upload/catalog/product/njhublcaay.png' },
-            { id: 'desert', name: 'DESERT', image: 'https://cucurigo.md/upload/catalog/product/hzn8defcri.png' }
-        ];
-
-        // Menu items
-        const menuItems = [
-            // PUI (from previous version)
-            { id: 1, name: "Crispy", price: 169, category: "pui", image: "https://cucurigo.md/upload/catalog/product/96t9pjbbj1.png" },
-            { id: 2, name: "Aripioare", price: 149, category: "pui", image: "https://via.placeholder.com/60" },
-            { id: 3, name: "Nuggets", price: 159, category: "pui", image: "https://via.placeholder.com/60" },
-            { id: 4, name: "Popcorn", price: 139, category: "pui", image: "https://via.placeholder.com/60" },
-            // BURGER (from previous version)
-            { id: 5, name: "Rigo Burger", price: 189, category: "burger", image: "https://via.placeholder.com/60" },
-            // MENIURI (from screenshots 1-2)
-            { id: 6, name: "Meniu Crispy", price: 299, category: "meniuri", image: "https://via.placeholder.com/60" },
-            { id: 7, name: "Meniu Aripioare", price: 279, category: "meniuri", image: "https://via.placeholder.com/60" },
-            { id: 8, name: "Meniu Nuggets", price: 289, category: "meniuri", image: "https://via.placeholder.com/60" },
-            { id: 9, name: "Meniu Popcorn", price: 269, category: "meniuri", image: "https://via.placeholder.com/60" },
-            { id: 10, name: "Meniu Rigo Burger", price: 319, category: "meniuri", image: "https://via.placeholder.com/60" },
-            { id: 11, name: "Meniu Crispy & Aripioare", price: 349, category: "meniuri", image: "https://via.placeholder.com/60" },
-            { id: 12, name: "Meniu Nuggets & Popcorn", price: 339, category: "meniuri", image: "https://via.placeholder.com/60" },
-            { id: 13, name: "Meniu Cupmix All", price: 359, category: "meniuri", image: "https://via.placeholder.com/60" },
-            // CUPMIX (from screenshot 3)
-            { id: 14, name: "Cupmix Nuggets & Popcorn", price: 199, category: "cupmix", image: "https://via.placeholder.com/60" },
-            { id: 15, name: "Cupmix All", price: 229, category: "cupmix", image: "https://via.placeholder.com/60" },
-            { id: 16, name: "Cupmix Crispy & Aripioare", price: 219, category: "cupmix", image: "https://via.placeholder.com/60" },
-            // GARNITURI (from screenshot 4)
-            { id: 17, name: "Cartofi Cheddar", price: 79, category: "garnituri", image: "https://via.placeholder.com/60" },
-            { id: 18, name: "Cartofi Prăjiți", price: 69, category: "garnituri", image: "https://via.placeholder.com/60" },
-            { id: 19, name: "Inele de Ceapă", price: 59, category: "garnituri", image: "https://via.placeholder.com/60" }
-        ];
-
-        let cart = {};
-        let currentCategory = null;
-
-        // Set up Telegram Web App
-        const WebApp = window.Telegram.WebApp;
-        WebApp.ready();
-        WebApp.expand();
-
-        // Apply color scheme based on user's Telegram theme
-        function applyColorScheme() {
-            const theme = WebApp.colorScheme;
-            document.body.setAttribute('data-theme', theme);
+        // Check if Telegram WebApp object is available.
+        // The Telegram WebApp script is automatically injected when running in Telegram.
+        // For local development, it won't be available, so we'll create a mock.
+        if (!window.Telegram || !window.Telegram.WebApp) {
+            window.Telegram = {
+                WebApp: {
+                    ready: () => console.log("Telegram WebApp ready (mock)"),
+                    expand: () => console.log("Telegram WebApp expanded (mock)"),
+                    showAlert: (message) => console.log("Alert (mock):", message),
+                    sendData: (data) => console.log("Sending data (mock):", data),
+                    onEvent: (eventType, callback) => { /* mock for event listener */ },
+                    offEvent: (eventType, callback) => { /* mock for event listener */ },
+                    isExpanded: true // Assume expanded for mock
+                }
+            };
         }
 
-        // Apply theme on load
-        applyColorScheme();
+        // --- Product Data ---
+        const products = [
+            {
+                id: 'shoe1',
+                name: 'Deconstructed Cyber Runner',
+                description: 'Futuristic high-top sneakers with distressed panels and oversized sole.',
+                price: 899.99,
+                imageUrl: 'https://placehold.co/400x300/e0e0e0/555555?text=Cyber+Runner'
+            },
+            {
+                id: 'hoodie1',
+                name: 'Oversized Distorted Hoodie',
+                description: 'Heavyweight cotton hoodie with faded black wash and distorted graphic print.',
+                price: 450.00,
+                imageUrl: 'https://placehold.co/400x300/e0e0e0/555555?text=Distorted+Hoodie'
+            },
+            {
+                id: 'pant1',
+                name: 'Utility Cargo Trousers',
+                description: 'Loose-fit cargo trousers with multiple functional pockets and reinforced seams.',
+                price: 620.00,
+                imageUrl: 'https://placehold.co/400x300/e0e0e0/555555?text=Cargo+Trousers'
+            },
+            {
+                id: 'boot1',
+                name: 'Chunky Platform Boots',
+                description: 'Architectural leather boots with exaggerated platform and rugged sole.',
+                price: 1100.00,
+                imageUrl: 'https://placehold.co/400x300/e0e0e0/555555?text=Platform+Boots'
+            },
+             {
+                id: 'jacket1',
+                name: 'Technical Shell Jacket',
+                description: 'Lightweight technical jacket with water-resistant finish and adjustable hood.',
+                price: 780.00,
+                imageUrl: 'https://placehold.co/400x300/e0e0e0/555555?text=Shell+Jacket'
+            },
+            {
+                id: 'tee1',
+                name: 'Raw Edge Oversized Tee',
+                description: 'Soft cotton tee with raw edge details and relaxed fit for layering.',
+                price: 280.00,
+                imageUrl: 'https://placehold.co/400x300/e0e0e0/555555?text=Oversized+Tee'
+            }
+        ];
 
-        // Listen for theme changes
-        WebApp.onEvent('themeChanged', applyColorScheme);
+        let cart = {}; // Stores { productId: quantity }
 
-        // Render categories
-        function renderCategories() {
-            const menuContent = document.getElementById('menu-content');
-            menuContent.innerHTML = '';
-            const categoryGrid = document.createElement('div');
-            categoryGrid.className = 'category-grid';
-            categories.forEach(category => {
-                const categoryDiv = document.createElement('div');
-                categoryDiv.className = 'category-item';
-                categoryDiv.innerHTML = `
-                    <img src="${category.image}" alt="${category.name}">
-                    <div class="item-details">
-                        <p>${category.name}</p>
+        // --- DOM Elements ---
+        const productGrid = document.getElementById('product-grid');
+        const cartButton = document.getElementById('cart-button');
+        const cartCountSpan = document.getElementById('cart-count');
+        const cartModal = document.getElementById('cart-modal');
+        const cartModalContent = document.getElementById('cart-modal-content');
+        const closeCartModalButton = document.getElementById('close-cart-modal');
+        const cartItemsContainer = document.getElementById('cart-items-container');
+        const emptyCartMessage = document.getElementById('empty-cart-message');
+        const cartTotalSpan = document.getElementById('cart-total');
+        const checkoutButton = document.getElementById('checkout-button');
+
+        const alertModal = document.getElementById('alert-modal');
+        const alertModalContent = document.getElementById('alert-modal-content');
+        const alertTitle = document.getElementById('alert-title');
+        const alertMessage = document.getElementById('alert-message');
+        const closeAlertModalButton = document.getElementById('close-alert-modal');
+
+        // --- Utility Functions ---
+
+        /**
+         * Displays a custom alert message to the user.
+         * @param {string} title - The title of the alert.
+         * @param {string} message - The message content of the alert.
+         */
+        function showAlert(title, message) {
+            alertTitle.textContent = title;
+            alertMessage.textContent = message;
+            alertModal.classList.remove('hidden');
+            setTimeout(() => {
+                alertModalContent.classList.remove('scale-95', 'opacity-0');
+                alertModalContent.classList.add('scale-100', 'opacity-100');
+            }, 10); // Small delay for animation
+        }
+
+        /**
+         * Hides the custom alert modal.
+         */
+        function hideAlert() {
+            alertModalContent.classList.remove('scale-100', 'opacity-100');
+            alertModalContent.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                alertModal.classList.add('hidden');
+            }, 300); // Wait for animation to complete
+        }
+
+        /**
+         * Renders all products to the grid.
+         */
+        function renderProducts() {
+            productGrid.innerHTML = ''; // Clear existing products
+            products.forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.className = 'bg-gray-100 rounded-xl shadow-md overflow-hidden transform transition-all duration-300 hover:scale-[1.02] hover:shadow-lg flex flex-col';
+                productCard.innerHTML = `
+                    <img src="${product.imageUrl}" alt="${product.name}" class="w-full h-48 object-cover object-center">
+                    <div class="p-4 flex flex-col flex-grow">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">${product.name}</h3>
+                        <p class="text-gray-600 text-sm mb-3 flex-grow">${product.description}</p>
+                        <div class="flex items-center justify-between mt-auto">
+                            <span class="text-2xl font-bold text-gray-900">$${product.price.toFixed(2)}</span>
+                            <button data-product-id="${product.id}" class="add-to-cart-btn bg-gray-800 text-white px-4 py-2 rounded-lg font-medium hover:bg-gray-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-400">
+                                Add to Cart
+                            </button>
+                        </div>
                     </div>
                 `;
-                categoryDiv.onclick = () => {
-                    currentCategory = category.id;
-                    renderMenu();
-                    document.getElementById('back-to-categories').style.display = 'block';
-                };
-                categoryGrid.appendChild(categoryDiv);
+                productGrid.appendChild(productCard);
             });
-            menuContent.appendChild(categoryGrid);
-            document.getElementById('back-to-categories').style.display = 'none';
-        }
 
-        // Render menu items
-        function renderMenu() {
-            const menuContent = document.getElementById('menu-content');
-            menuContent.innerHTML = '';
-
-            if (['pui', 'burger', 'meniuri', 'cupmix', 'garnituri'].includes(currentCategory)) {
-                const filteredItems = menuItems.filter(item => item.category === currentCategory);
-                const menuGrid = document.createElement('div');
-                menuGrid.className = 'menu-grid';
-                filteredItems.forEach(item => {
-                    const itemDiv = document.createElement('div');
-                    itemDiv.className = 'menu-item';
-                    const qty = cart[item.id] ? cart[item.id].quantity : 0;
-                    itemDiv.innerHTML = `
-                        <img src="${item.image}" alt="${item.name}">
-                        <div class="item-details">
-                            <p>${item.name}</p>
-                            <p>${item.price} MDL</p>
-                        </div>
-                        <div id="controls-${item.id}">
-                            ${qty === 0 ? `
-                                <button class="add-button" onclick="addToCart(${item.id})">ADD</button>
-                            ` : `
-                                <div class="quantity-controls">
-                                    <button class="quantity-btn" onclick="updateQuantity(${item.id}, -1)">-</button>
-                                    <span class="quantity" id="qty-${item.id}">${qty}</span>
-                                    <button class="quantity-btn" onclick="updateQuantity(${item.id}, 1)">+</button>
-                                </div>
-                            `}
-                        </div>
-                    `;
-                    menuGrid.appendChild(itemDiv);
+            // Add event listeners to "Add to Cart" buttons
+            document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    const productId = event.target.dataset.productId;
+                    addToCart(productId);
                 });
-                menuContent.appendChild(menuGrid);
-            } else {
-                const messageDiv = document.createElement('div');
-                messageDiv.style.padding = '20px';
-                messageDiv.textContent = 'This category will be available soon.';
-                menuContent.appendChild(messageDiv);
-            }
-
-            updateViewOrderButton();
+            });
         }
 
-        // Initial render (categories)
-        renderCategories();
+        /**
+         * Adds a product to the cart or increments its quantity.
+         * @param {string} productId - The ID of the product to add.
+         */
+        function addToCart(productId) {
+            cart[productId] = (cart[productId] || 0) + 1;
+            updateCartDisplay();
+            showAlert('Item Added!', `${products.find(p => p.id === productId).name} has been added to your cart.`);
+        }
 
-        // Back to categories
-        document.getElementById('back-to-categories').addEventListener('click', () => {
-            currentCategory = null;
-            renderCategories();
-        });
-
-        // Update quantity and cart
-        function updateQuantity(itemId, change) {
-            const qtyElement = document.getElementById(`qty-${itemId}`);
-            let qty = parseInt(qtyElement.textContent) + change;
-            qty = Math.max(0, qty); // Prevent negative quantities
-            if (qty === 0) {
-                delete cart[itemId];
+        /**
+         * Updates the quantity of a product in the cart.
+         * @param {string} productId - The ID of the product.
+         * @param {number} quantity - The new quantity.
+         */
+        function updateCartItemQuantity(productId, quantity) {
+            if (quantity <= 0) {
+                delete cart[productId];
             } else {
-                if (!cart[itemId]) {
-                    const item = menuItems.find(i => i.id === itemId);
-                    cart[itemId] = { ...item, quantity: 0 };
+                cart[productId] = quantity;
+            }
+            updateCartDisplay();
+        }
+
+        /**
+         * Removes a product from the cart.
+         * @param {string} productId - The ID of the product to remove.
+         */
+        function removeFromCart(productId) {
+            delete cart[productId];
+            updateCartDisplay();
+            showAlert('Item Removed!', 'Product has been removed from your cart.');
+        }
+
+        /**
+         * Updates the cart count on the floating button and renders cart items in the modal.
+         */
+        function updateCartDisplay() {
+            let totalItems = 0;
+            let totalPrice = 0;
+            cartItemsContainer.innerHTML = ''; // Clear current cart items
+
+            const cartProductIds = Object.keys(cart);
+            if (cartProductIds.length === 0) {
+                emptyCartMessage.classList.remove('hidden');
+                checkoutButton.disabled = true;
+                checkoutButton.classList.add('opacity-50', 'cursor-not-allowed');
+            } else {
+                emptyCartMessage.classList.add('hidden');
+                checkoutButton.disabled = false;
+                checkoutButton.classList.remove('opacity-50', 'cursor-not-allowed');
+
+                cartProductIds.forEach(productId => {
+                    const product = products.find(p => p.id === productId);
+                    const quantity = cart[productId];
+                    if (product) {
+                        totalItems += quantity;
+                        totalPrice += product.price * quantity;
+
+                        const cartItemDiv = document.createElement('div');
+                        cartItemDiv.className = 'flex items-center justify-between bg-gray-50 p-3 rounded-lg mb-3 shadow-sm';
+                        cartItemDiv.innerHTML = `
+                            <img src="${product.imageUrl}" alt="${product.name}" class="w-16 h-16 rounded-md object-cover mr-4">
+                            <div class="flex-grow">
+                                <h4 class="font-semibold text-gray-800">${product.name}</h4>
+                                <p class="text-gray-600 text-sm">$${product.price.toFixed(2)} each</p>
+                            </div>
+                            <div class="flex items-center ml-4">
+                                <button data-product-id="${product.id}" data-action="decrement" class="quantity-btn bg-gray-200 text-gray-700 w-8 h-8 rounded-full flex items-center justify-center hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400">
+                                    <i class="fas fa-minus text-xs"></i>
+                                </button>
+                                <input type="number" value="${quantity}" min="1" data-product-id="${product.id}" class="quantity-input w-12 text-center mx-2 border border-gray-300 rounded-md py-1 focus:ring-gray-500 focus:border-gray-500">
+                                <button data-product-id="${product.id}" data-action="increment" class="quantity-btn bg-gray-200 text-gray-700 w-8 h-8 rounded-full flex items-center justify-center hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400">
+                                    <i class="fas fa-plus text-xs"></i>
+                                </button>
+                                <button data-product-id="${product.id}" data-action="remove" class="ml-4 text-red-500 hover:text-red-700 focus:outline-none">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        `;
+                        cartItemsContainer.appendChild(cartItemDiv);
+                    }
+                });
+
+                // Add event listeners for quantity buttons and inputs
+                cartItemsContainer.querySelectorAll('.quantity-btn').forEach(button => {
+                    button.addEventListener('click', (event) => {
+                        const productId = event.currentTarget.dataset.productId;
+                        const action = event.currentTarget.dataset.action;
+                        const currentQuantity = cart[productId] || 0;
+                        if (action === 'increment') {
+                            updateCartItemQuantity(productId, currentQuantity + 1);
+                        } else if (action === 'decrement') {
+                            updateCartItemQuantity(productId, currentQuantity - 1);
+                        }
+                    });
+                });
+
+                 cartItemsContainer.querySelectorAll('.quantity-input').forEach(input => {
+                    input.addEventListener('change', (event) => {
+                        const productId = event.target.dataset.productId;
+                        let newQuantity = parseInt(event.target.value, 10);
+                        if (isNaN(newQuantity) || newQuantity < 1) {
+                            newQuantity = 1; // Default to 1 if invalid
+                            event.target.value = 1;
+                        }
+                        updateCartItemQuantity(productId, newQuantity);
+                    });
+                });
+
+                cartItemsContainer.querySelectorAll('[data-action="remove"]').forEach(button => {
+                    button.addEventListener('click', (event) => {
+                        const productId = event.currentTarget.dataset.productId;
+                        removeFromCart(productId);
+                    });
+                });
+            }
+
+            cartCountSpan.textContent = totalItems;
+            cartCountSpan.classList.toggle('opacity-0', totalItems === 0);
+            cartTotalSpan.textContent = `$${totalPrice.toFixed(2)}`;
+        }
+
+        /**
+         * Opens the cart modal.
+         */
+        function openCartModal() {
+            updateCartDisplay(); // Ensure cart display is up-to-date
+            cartModal.classList.remove('hidden');
+            setTimeout(() => {
+                cartModalContent.classList.remove('scale-95', 'opacity-0');
+                cartModalContent.classList.add('scale-100', 'opacity-100');
+            }, 10); // Small delay for animation
+        }
+
+        /**
+         * Hides the cart modal.
+         */
+        function hideCartModal() {
+            cartModalContent.classList.remove('scale-100', 'opacity-100');
+            cartModalContent.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                cartModal.classList.add('hidden');
+            }, 300); // Wait for animation to complete
+        }
+
+        /**
+         * Handles the checkout process by sending cart data to the Telegram bot.
+         */
+        function handleCheckout() {
+            if (Object.keys(cart).length === 0) {
+                showAlert('Cart Empty', 'Please add items to your cart before checking out.');
+                return;
+            }
+
+            const orderDetails = {
+                items: [],
+                total: parseFloat(cartTotalSpan.textContent.replace('$', ''))
+            };
+
+            for (const productId in cart) {
+                const product = products.find(p => p.id === productId);
+                if (product) {
+                    orderDetails.items.push({
+                        id: product.id,
+                        name: product.name,
+                        price: product.price,
+                        quantity: cart[productId]
+                    });
                 }
-                cart[itemId].quantity = qty;
             }
-            updateViewOrderButton();
-            renderMenu(); // Re-render to update controls
+
+            // Send data to the Telegram bot
+            Telegram.WebApp.sendData(JSON.stringify(orderDetails));
+            showAlert('Order Submitted!', 'Your order details have been sent to the store. We will contact you shortly!');
+            cart = {}; // Clear cart after sending data
+            updateCartDisplay();
+            hideCartModal();
         }
 
-        // Add item to cart
-        function addToCart(itemId) {
-            const item = menuItems.find(i => i.id === itemId);
-            if (!cart[itemId]) {
-                cart[itemId] = { ...item, quantity: 0 };
+        // --- Event Listeners ---
+        cartButton.addEventListener('click', openCartModal);
+        closeCartModalButton.addEventListener('click', hideCartModal);
+        checkoutButton.addEventListener('click', handleCheckout);
+        closeAlertModalButton.addEventListener('click', hideAlert);
+
+        // Close modals if clicking outside content (optional)
+        cartModal.addEventListener('click', (event) => {
+            if (event.target === cartModal) {
+                hideCartModal();
             }
-            cart[itemId].quantity++;
-            WebApp.showAlert(`Added ${item.name} to cart!`);
-            updateViewOrderButton();
-            renderMenu(); // Re-render to show quantity controls
-        }
-
-        // Update view order button visibility
-        function updateViewOrderButton() {
-            const viewOrderBtn = document.getElementById('view-order');
-            const totalQuantity = Object.values(cart).reduce((sum, item) => sum + (item.quantity || 0), 0);
-            viewOrderBtn.style.display = totalQuantity > 0 ? 'block' : 'none';
-        }
-
-        // Handle view order
-        document.getElementById('view-order').addEventListener('click', () => {
-            const orderItems = Object.values(cart).filter(item => item.quantity > 0);
-            const orderSummary = orderItems.map(item => `${item.name} x${item.quantity}: ${item.price * item.quantity} MDL`).join('\n');
-            const total = orderItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
-            WebApp.sendData(JSON.stringify({ order: orderItems, total }));
-            WebApp.showAlert(`Order placed!\n\n${orderSummary}\nTotal: ${total} MDL`);
-            cart = {};
-            renderMenu();
-            updateViewOrderButton();
         });
+        alertModal.addEventListener('click', (event) => {
+            if (event.target === alertModal) {
+                hideAlert();
+            }
+        });
+
+
+        // --- Initialize App ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderProducts();
+            updateCartDisplay(); // Initialize cart count on load
+
+            // Initialize Telegram WebApp
+            Telegram.WebApp.ready();
+            Telegram.WebApp.expand(); // Make the app take full height if possible
+        });
+
     </script>
 </body>
 </html>
