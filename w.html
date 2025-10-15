@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nightform Apparel</title>
+<style>
+    /* Reset */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Creepster', cursive, sans-serif;
+    }
+
+    /* Import Google Font */
+    @import url('https://fonts.googleapis.com/css2?family=Creepster&display=swap');
+
+    body {
+        background-color: #0b0b0b;
+        color: #fff;
+        overflow-x: hidden;
+    }
+
+    /* Neon Glowing Header */
+    header {
+        text-align: center;
+        padding: 50px 20px;
+        background: linear-gradient(135deg, #0b0b0b 0%, #1a1a1a 100%);
+        border-bottom: 2px solid #ff00ff;
+    }
+
+    header h1 {
+        font-size: 4rem;
+        color: #ff00ff;
+        text-shadow:
+            0 0 5px #ff00ff,
+            0 0 10px #ff00ff,
+            0 0 20px #ff00ff,
+            0 0 40px #ff00ff;
+        margin-bottom: 10px;
+    }
+
+    header p {
+        font-size: 1.2rem;
+        color: #ff66ff;
+        text-shadow: 0 0 5px #ff66ff;
+    }
+
+    /* Navigation */
+    nav {
+        display: flex;
+        justify-content: center;
+        gap: 40px;
+        margin-top: 20px;
+    }
+
+    nav a {
+        color: #ff00ff;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 1.1rem;
+        transition: 0.3s;
+        text-shadow: 0 0 5px #ff00ff;
+    }
+
+    nav a:hover {
+        color: #00ffff;
+        text-shadow:
+            0 0 10px #00ffff,
+            0 0 20px #00ffff;
+    }
+
+    /* Hero Section */
+    .hero {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 80vh;
+        background: url('https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=1950&q=80') center/cover no-repeat;
+        position: relative;
+    }
+
+    .hero::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-color: rgba(11, 11, 11, 0.7);
+    }
+
+    .hero-content {
+        position: relative;
+        color: #ff00ff;
+        text-align: center;
+        z-index: 1;
+    }
+
+    .hero-content h2 {
+        font-size: 3rem;
+        margin-bottom: 20px;
+        text-shadow: 0 0 10px #ff00ff;
+    }
+
+    .hero-content button {
+        padding: 15px 40px;
+        font-size: 1.2rem;
+        border: 2px solid #ff00ff;
+        background: transparent;
+        color: #ff00ff;
+        cursor: pointer;
+        text-transform: uppercase;
+        transition: 0.3s;
+        text-shadow: 0 0 5px #ff00ff;
+    }
+
+    .hero-content button:hover {
+        background: #ff00ff;
+        color: #0b0b0b;
+        box-shadow: 0 0 20px #ff00ff, 0 0 40px #ff00ff;
+    }
+
+    /* Products Section */
+    .products {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 30px;
+        padding: 50px 20px;
+    }
+
+    .product-card {
+        background-color: #111;
+        border: 1px solid #ff00ff;
+        padding: 20px;
+        border-radius: 10px;
+        transition: transform 0.3s, box-shadow 0.3s;
+        text-align: center;
+    }
+
+    .product-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 0 20px #ff00ff, 0 0 40px #ff00ff;
+    }
+
+    .product-card img {
+        max-width: 100%;
+        border-radius: 5px;
+        margin-bottom: 15px;
+    }
+
+    .product-card h3 {
+        margin-bottom: 10px;
+        color: #ff66ff;
+    }
+
+    .product-card p {
+        font-size: 0.9rem;
+        color: #ccc;
+        margin-bottom: 15px;
+    }
+
+    .product-card button {
+        padding: 10px 25px;
+        border: 1px solid #ff00ff;
+        background: transparent;
+        color: #ff00ff;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .product-card button:hover {
+        background: #ff00ff;
+        color: #0b0b0b;
+        box-shadow: 0 0 15px #ff00ff;
+    }
+
+    /* Footer */
+    footer {
+        text-align: center;
+        padding: 30px 20px;
+        border-top: 2px solid #ff00ff;
+        margin-top: 50px;
+        color: #ff66ff;
+    }
+
+    footer a {
+        color: #ff00ff;
+        text-decoration: none;
+    }
+</style>
+</head>
+<body>
+
+<header>
+    <h1>Nightform</h1>
+    <p>Dark Neon Gothic Streetwear</p>
+    <nav>
+        <a href="#hero">Home</a>
+        <a href="#products">Shop</a>
+        <a href="#contact">Contact</a>
+    </nav>
+</header>
+
+<section class="hero" id="hero">
+    <div class="hero-content">
+        <h2>Embrace the Night</h2>
+        <button>Explore Collection</button>
+    </div>
+</section>
+
+<section class="products" id="products">
+    <div class="product-card">
+        <img src="https://images.unsplash.com/photo-1593032457864-6a0ef0a27fc5?auto=format&fit=crop&w=800&q=80" alt="Product 1">
+        <h3>Gothic Hoodie</h3>
+        <p>Neon lined dark hoodie with gothic symbols.</p>
+        <button>Buy Now</button>
+    </div>
+    <div class="product-card">
+        <img src="https://images.unsplash.com/photo-1593032492856-4fdbb2a0aee3?auto=format&fit=crop&w=800&q=80" alt="Product 2">
+        <h3>Neon Jacket</h3>
+        <p>Streetwear jacket with neon piping and gothic vibes.</p>
+        <button>Buy Now</button>
+    </div>
+    <div class="product-card">
+        <img src="https://images.unsplash.com/photo-1593032491775-1e91c6dc4d8b?auto=format&fit=crop&w=800&q=80" alt="Product 3">
+        <h3>Dark T-Shirt</h3>
+        <p>Minimalist dark shirt with subtle neon accents.</p>
+        <button>Buy Now</button>
+    </div>
+</section>
+
+<footer id="contact">
+    <p>© 2025 Nightform Apparel | Designed for the Night</p>
+    <p>Follow us on <a href="#">Instagram</a> | <a href="#">TikTok</a></p>
+</footer>
+
+</body>
+</html>
